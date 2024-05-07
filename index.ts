@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch";
 import { Queries } from "./types";
 import { generateUserPrompt } from "./query";
+const fetch = require("node-fetch");
 
 const app = express();
 const port = process.env.PORT || 5000;
