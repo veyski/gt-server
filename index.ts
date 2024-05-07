@@ -37,10 +37,9 @@ app.post("/makeapicall", async (req, res) => {
     }),
   });
 
-  const json: any = await response.json();
-  const advice = json.choices[0].message.content;
+  const json: unknown = await response.json();
 
-  res.json({ answer: advice });
+  res.json(json);
 });
 
 app.listen(port, () => {
