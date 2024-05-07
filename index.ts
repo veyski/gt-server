@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import { Queries } from "./types";
 import { generateUserPrompt } from "./query";
+import dotenv from "dotenv";
+
+dotenv.config();
+console.log(process.env);
 
 const app = express();
 const port = process.env.PORT || 5000;
