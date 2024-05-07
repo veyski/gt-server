@@ -40,9 +40,7 @@ app.post("/makeapicall", async (req, res) => {
     }),
   });
 
-  const json: any = await response.json();
-
-  res.send(json.choices[0].messages.content);
+  res.send(await response.json());
 });
 
 app.listen(port, () => {
