@@ -3,6 +3,7 @@ import cors from "cors";
 import { Queries } from "./types";
 import { generateUserPrompt } from "./query";
 import dotenv from "dotenv";
+import OpenAI from "openai";
 
 dotenv.config();
 console.log(process.env);
@@ -17,33 +18,30 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+type GptResponse = {
+  answer: string;
+};
+
+const openai = new OpenAI({ apiKey: process.env.API_KEY });
+
 app.post("/makeapicall", async (req, res) => {
   const { queries }: { queries: Queries } = req.body;
 
   const userPrompt = generateUserPrompt(queries);
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      max_tokens: 500,
-      temperature: 0.5,
-      messages: [
-        {
-          role: "user",
-          content: userPrompt,
-        },
-      ],
-    }),
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    max_tokens: 500,
+    temperature: 0.5,
+    messages: [
+      {
+        role: "user",
+        content: userPrompt,
+      },
+    ],
   });
 
-  const json: unknown = await response.json();
-
-  res.json(json);
+  res.send(response.choices[0].message.content);
 });
 
 app.listen(port, () => {
